@@ -6,17 +6,32 @@ const path = require('path');
 const { format, startOfMonth, endOfMonth, getDaysInMonth } = require('date-fns');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Vercel akan menyediakan PORT
 
 app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' }));
-app.use(express.static(path.join(__dirname, 'public')));
 
-const dbPath = path.join(__dirname, 'data', 'database.db');
+// Sajikan file statis dari folder 'public'
+// Gunakan process.cwd() agar path selalu benar di Vercel
+app.use(express.static(path.join(process.cwd(), 'public')));
+
+// Arahkan root ke Dashboard_Harian.html
+app.get('/', (req, res) => {
+    res.redirect('/Dashboard_Harian.html');
+});
+
+// Path ke database, gunakan /tmp untuk lingkungan Vercel
+// PERINGATAN: Data di /tmp akan hilang secara periodik.
+// Ini adalah langkah sementara untuk membuat aplikasi berjalan.
+const dbPath = path.join('/tmp', 'database.db');
+
+// NOTE: Kode untuk menyalin DB awal ke /tmp diperlukan jika DB tidak kosong
+// Untuk saat ini, kita biarkan ia membuat DB baru di /tmp
+
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) return console.error('Error opening database:', err.message);
-    console.log('Connected to the SQLite database.');
-    
+    console.log('Connected to the in-memory SQLite database for Vercel.');
+
     db.serialize(() => {
         db.run(`CREATE TABLE IF NOT EXISTS harian (id INTEGER PRIMARY KEY AUTOINCREMENT, tanggal TEXT NOT NULL UNIQUE, ob_removal_tc REAL, ritase_ob REAL, jarak_ob REAL, coal_getting_tc REAL, ritase_coal REAL, jarak_coal REAL, mud_removal REAL, tonase_batu_belah REAL, tonase_batu_split REAL, tonase_sirtu REAL, biaya_penambangan REAL DEFAULT 0, biaya_dewatering REAL DEFAULT 0, biaya_stockpile REAL DEFAULT 0, biaya_screening REAL DEFAULT 0, biaya_hauling_road REAL DEFAULT 0, biaya_ppm REAL DEFAULT 0, total_biaya_harian REAL DEFAULT 0)`);
         db.run(`CREATE TABLE IF NOT EXISTS alat_harian (id INTEGER PRIMARY KEY AUTOINCREMENT, harian_id INTEGER, alat TEXT, tujuan TEXT, jam_operasi REAL, fuel_pengisian REAL, fuel_penggunaan REAL, jarak_km REAL, FOREIGN KEY (harian_id) REFERENCES harian(id) ON DELETE CASCADE)`);
@@ -25,9 +40,10 @@ const db = new sqlite3.Database(dbPath, (err) => {
         db.run(`CREATE TABLE IF NOT EXISTS equipment_details (alat_nama TEXT PRIMARY KEY, category TEXT, biaya_rental REAL, non_charge_hours_limit REAL, overcharge_price REAL)`);
         db.run(`CREATE TABLE IF NOT EXISTS trucking_harian (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, shift TEXT, checkout_time TEXT, do_number TEXT, truck_number TEXT, driver_name TEXT, buyer TEXT, rom TEXT, port TEXT, trade_term TEXT, tare REAL, gross REAL, nett REAL, notes TEXT)`);
         db.run(`CREATE TABLE IF NOT EXISTS penjualan (id INTEGER PRIMARY KEY AUTOINCREMENT, tanggal_penjualan TEXT, tipe_dokumen TEXT, nomor_dokumen TEXT, buyer TEXT, tonase_penjualan REAL, notes TEXT)`);
-		db.run(`CREATE TABLE IF NOT EXISTS targets (periode TEXT PRIMARY KEY, target_ob REAL, target_coal REAL)`);
+        db.run(`CREATE TABLE IF NOT EXISTS targets (periode TEXT PRIMARY KEY, target_ob REAL, target_coal REAL)`);
         db.run(`CREATE TABLE IF NOT EXISTS fleet_harian (id INTEGER PRIMARY KEY AUTOINCREMENT, tanggal TEXT NOT NULL, nama_fleet TEXT NOT NULL, volume_bcm REAL, jarak_meter REAL)`);
-
+    });
+});
         const addColumnIfNotExists = (tableName, columnName, columnType) => {
             db.all(`PRAGMA table_info(${tableName})`, (err, columns) => {
                 if (err) return;
@@ -1368,12 +1384,6 @@ app.get('/api/dashboard-data', async (req, res) => {
 //end kode grafik dashboard rwd
 
 
-
-// SETELAH DIUBAH
-// Hapus atau beri komentar pada bagian app.listen
-// app.listen(PORT, '0.0.0.0', () => {
-//     console.log(`Server running and accessible on your network at port ${PORT}.`);
-// });
-
 // Tambahkan baris ini di paling bawah
 module.exports = app;
+
