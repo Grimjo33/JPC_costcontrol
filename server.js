@@ -3,34 +3,34 @@ const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs'); // Modul baru yang kita butuhkan
 const { format, startOfMonth, endOfMonth, getDaysInMonth } = require('date-fns');
 
 const app = express();
-const PORT = process.env.PORT || 3000; // Vercel akan menyediakan PORT
 
 app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' }));
-
-// Sajikan file statis dari folder 'public'
-// Gunakan process.cwd() agar path selalu benar di Vercel
 app.use(express.static(path.join(process.cwd(), 'public')));
 
-// Arahkan root ke Dashboard_Harian.html
-app.get('/', (req, res) => {
-    res.redirect('/Dashboard_Harian.html');
+// --- PENGATURAN DATABASE UNTUK VERCEL ---
+// Path ke database asli Anda (read-only di Vercel)
+const sourceDbPath = path.join(process.cwd(), 'data', 'database.db');
+// Path ke lokasi database yang bisa ditulis di Vercel
+const tempDbPath = path.join('/tmp', 'database.db');
+
+// Salin file database ke /tmp jika belum ada di sana
+// Ini hanya terjadi saat "cold start"
+if (!fs.existsSync(tempDbPath)) {
+  fs.copyFileSync(sourceDbPath, tempDbPath);
+}
+
+const db = new sqlite3.Database(tempDbPath, (err) => {
+    if (err) {
+        return console.error('Error opening database:', err.message);
+    }
+    console.log('Connected to the SQLite database in /tmp.');
 });
-
-// Path ke database, gunakan /tmp untuk lingkungan Vercel
-// PERINGATAN: Data di /tmp akan hilang secara periodik.
-// Ini adalah langkah sementara untuk membuat aplikasi berjalan.
-const dbPath = path.join('/tmp', 'database.db');
-
-// NOTE: Kode untuk menyalin DB awal ke /tmp diperlukan jika DB tidak kosong
-// Untuk saat ini, kita biarkan ia membuat DB baru di /tmp
-
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) return console.error('Error opening database:', err.message);
-    console.log('Connected to the in-memory SQLite database for Vercel.');
+// --- AKHIR PENGATURAN DATABASE ---
 
     db.serialize(() => {
         db.run(`CREATE TABLE IF NOT EXISTS harian (id INTEGER PRIMARY KEY AUTOINCREMENT, tanggal TEXT NOT NULL UNIQUE, ob_removal_tc REAL, ritase_ob REAL, jarak_ob REAL, coal_getting_tc REAL, ritase_coal REAL, jarak_coal REAL, mud_removal REAL, tonase_batu_belah REAL, tonase_batu_split REAL, tonase_sirtu REAL, biaya_penambangan REAL DEFAULT 0, biaya_dewatering REAL DEFAULT 0, biaya_stockpile REAL DEFAULT 0, biaya_screening REAL DEFAULT 0, biaya_hauling_road REAL DEFAULT 0, biaya_ppm REAL DEFAULT 0, total_biaya_harian REAL DEFAULT 0)`);
@@ -1386,4 +1386,5 @@ app.get('/api/dashboard-data', async (req, res) => {
 
 // Tambahkan baris ini di paling bawah
 module.exports = app;
+
 
