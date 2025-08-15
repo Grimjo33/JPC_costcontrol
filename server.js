@@ -56,6 +56,7 @@ app.get('/api/get-jarak-fleet-by-tanggal', async (req, res) => {
     }
 });
 
+
 app.post('/api/submit-jarak-fleet', async (req, res) => {
     const { tanggal, fleet_list } = req.body;
     if (!tanggal || !Array.isArray(fleet_list)) {
@@ -1365,6 +1366,7 @@ app.get('/api/dashboard-data', async (req, res) => {
 
 // Tambahkan baris ini di paling bawah
 module.exports = app;
+
 
 
 
