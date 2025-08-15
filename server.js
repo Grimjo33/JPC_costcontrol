@@ -41,9 +41,9 @@ const dbRun = (sql, params = []) => new Promise((resolve, reject) => db.run(sql,
 const dbGet = (sql, params = []) => new Promise((resolve, reject) => db.get(sql, params, (err, row) => (err ? reject(err) : resolve(row))));
 const dbAll = (sql, params = []) => new Promise((resolve, reject) => db.all(sql, params, (err, rows) => (err ? reject(err) : resolve(rows))));
 
-app.get('/', (req, res) => res.redirect('/Dashboard_Harian.html'));
-
-// Endpoint untuk Jarak Fleet
+pp.get('/', (req, res) => {
+    res.redirect('/Dashboard_Harian.html');
+});
 app.get('/api/get-jarak-fleet-by-tanggal', async (req, res) => {
     try {
         const { tanggal } = req.query;
@@ -1364,6 +1364,7 @@ app.get('/api/dashboard-data', async (req, res) => {
 
 // Tambahkan baris ini di paling bawah
 module.exports = app;
+
 
 
 
