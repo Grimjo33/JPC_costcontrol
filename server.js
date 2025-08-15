@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const path = require('path');
-const fs = require('fs'); // Modul baru yang kita butuhkan
+const fs = require('fs'); // Diperlukan untuk menyalin DB
 const { format, startOfMonth, endOfMonth, getDaysInMonth } = require('date-fns');
 
 const app = express();
@@ -21,7 +21,12 @@ const tempDbPath = path.join('/tmp', 'database.db');
 // Salin file database ke /tmp jika belum ada di sana
 // Ini hanya terjadi saat "cold start"
 if (!fs.existsSync(tempDbPath)) {
-  fs.copyFileSync(sourceDbPath, tempDbPath);
+  try {
+    fs.copyFileSync(sourceDbPath, tempDbPath);
+    console.log('Database successfully copied to /tmp.');
+  } catch (error) {
+    console.error('Error copying database:', error);
+  }
 }
 
 const db = new sqlite3.Database(tempDbPath, (err) => {
@@ -32,36 +37,9 @@ const db = new sqlite3.Database(tempDbPath, (err) => {
 });
 // --- AKHIR PENGATURAN DATABASE ---
 
-    db.serialize(() => {
-        db.run(`CREATE TABLE IF NOT EXISTS harian (id INTEGER PRIMARY KEY AUTOINCREMENT, tanggal TEXT NOT NULL UNIQUE, ob_removal_tc REAL, ritase_ob REAL, jarak_ob REAL, coal_getting_tc REAL, ritase_coal REAL, jarak_coal REAL, mud_removal REAL, tonase_batu_belah REAL, tonase_batu_split REAL, tonase_sirtu REAL, biaya_penambangan REAL DEFAULT 0, biaya_dewatering REAL DEFAULT 0, biaya_stockpile REAL DEFAULT 0, biaya_screening REAL DEFAULT 0, biaya_hauling_road REAL DEFAULT 0, biaya_ppm REAL DEFAULT 0, total_biaya_harian REAL DEFAULT 0)`);
-        db.run(`CREATE TABLE IF NOT EXISTS alat_harian (id INTEGER PRIMARY KEY AUTOINCREMENT, harian_id INTEGER, alat TEXT, tujuan TEXT, jam_operasi REAL, fuel_pengisian REAL, fuel_penggunaan REAL, jarak_km REAL, FOREIGN KEY (harian_id) REFERENCES harian(id) ON DELETE CASCADE)`);
-        db.run(`CREATE TABLE IF NOT EXISTS rekon_survey (id INTEGER PRIMARY KEY AUTOINCREMENT, start_date TEXT NOT NULL, end_date TEXT NOT NULL, volume_ob_survey REAL, volume_coal_survey REAL, created_at TEXT DEFAULT CURRENT_TIMESTAMP, UNIQUE(start_date, end_date))`);
-        db.run(`CREATE TABLE IF NOT EXISTS cost_parameters (param_key TEXT PRIMARY KEY, param_value REAL)`);
-        db.run(`CREATE TABLE IF NOT EXISTS equipment_details (alat_nama TEXT PRIMARY KEY, category TEXT, biaya_rental REAL, non_charge_hours_limit REAL, overcharge_price REAL)`);
-        db.run(`CREATE TABLE IF NOT EXISTS trucking_harian (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, shift TEXT, checkout_time TEXT, do_number TEXT, truck_number TEXT, driver_name TEXT, buyer TEXT, rom TEXT, port TEXT, trade_term TEXT, tare REAL, gross REAL, nett REAL, notes TEXT)`);
-        db.run(`CREATE TABLE IF NOT EXISTS penjualan (id INTEGER PRIMARY KEY AUTOINCREMENT, tanggal_penjualan TEXT, tipe_dokumen TEXT, nomor_dokumen TEXT, buyer TEXT, tonase_penjualan REAL, notes TEXT)`);
-        db.run(`CREATE TABLE IF NOT EXISTS targets (periode TEXT PRIMARY KEY, target_ob REAL, target_coal REAL)`);
-        db.run(`CREATE TABLE IF NOT EXISTS fleet_harian (id INTEGER PRIMARY KEY AUTOINCREMENT, tanggal TEXT NOT NULL, nama_fleet TEXT NOT NULL, volume_bcm REAL, jarak_meter REAL)`);
-    });
-});
-        const addColumnIfNotExists = (tableName, columnName, columnType) => {
-            db.all(`PRAGMA table_info(${tableName})`, (err, columns) => {
-                if (err) return;
-                if (!columns.some(col => col.name === columnName)) {
-                    db.run(`ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${columnType}`);
-                }
-            });
-        };
-        addColumnIfNotExists('equipment_details', 'non_charge_hours_limit', 'REAL');
-        addColumnIfNotExists('equipment_details', 'overcharge_price', 'REAL');
-		addColumnIfNotExists('alat_harian', 'jarak_km', 'REAL');
-    });
-});
-
 const dbRun = (sql, params = []) => new Promise((resolve, reject) => db.run(sql, params, function (err) { (err ? reject(err) : resolve(this)); }));
 const dbGet = (sql, params = []) => new Promise((resolve, reject) => db.get(sql, params, (err, row) => (err ? reject(err) : resolve(row))));
 const dbAll = (sql, params = []) => new Promise((resolve, reject) => db.all(sql, params, (err, rows) => (err ? reject(err) : resolve(rows))));
-
 
 app.get('/', (req, res) => res.redirect('/Dashboard_Harian.html'));
 
@@ -1386,5 +1364,6 @@ app.get('/api/dashboard-data', async (req, res) => {
 
 // Tambahkan baris ini di paling bawah
 module.exports = app;
+
 
 
