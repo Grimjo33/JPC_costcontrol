@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Target Produksi - Cost Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> 
+        body { background-color: #0a0a0a; color: white; } 
+        .dropdown.is-open .dropdown-menu { display: block; }
+    </style>
+</head>
+<body class="font-sans p-4 sm:p-6">
+
+    <div id="nav-placeholder"></div>
+    <div id="notification-container" class="fixed bottom-5 right-5 z-50"></div>
+
+    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-green-500/30">
+            <h2 class="text-2xl font-bold mb-6 text-red-500">Input Target Produksi Bulanan</h2>
+            <form id="targetForm" class="space-y-4">
+                <div>
+                    <label class="block mb-1 text-gray-300">Periode (Bulan & Tahun)</label>
+                    <input type="month" name="periode" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600 focus:border-green-500" required>
+                </div>
+                <div>
+                    <label class="block mb-1 text-gray-300">Target OB Removal (BCM)</label>
+                    <input type="number" step="any" name="target_ob" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600" required>
+                </div>
+                <div>
+                    <label class="block mb-1 text-gray-300">Target Coal Getting (Ton)</label>
+                    <input type="number" step="any" name="target_coal" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600" required>
+                </div>
+                <button type="submit" id="submit-button" class="bg-red-500 hover:bg-red-600 px-6 py-3 text-white font-bold rounded-lg w-full mt-6">Simpan Target</button>
+            </form>
+        </div>
+        
+        <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700">
+             <h2 class="text-2xl font-bold mb-6 text-green-400">Daftar Target Tersimpan</h2>
+             <div id="target-list-container" class="space-y-2 max-h-96 overflow-y-auto">
+                <p id="loader" class="text-gray-400">Memuat target...</p>
+             </div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/inputTarget.js"></script>
+</body>
+</html>

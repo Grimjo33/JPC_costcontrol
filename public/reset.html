@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Database</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> 
+        body { background-color: #0a0a0a; color: white; } 
+    </style>
+</head>
+<body class="font-sans p-4 sm:p-6">
+    <div class="max-w-md mx-auto bg-gray-900 p-8 rounded-xl shadow-lg border border-red-500/50 mt-10">
+        <h2 class="text-2xl font-bold mb-4 text-red-400">Alat Reset Database</h2>
+        <p class="text-gray-400 mb-6">Tindakan ini akan menghapus semua data operasional (harian, rekon, hauling, penjualan) secara permanen. Data parameter biaya tidak akan terhapus. Pastikan Anda sudah melakukan backup.</p>
+        
+        <div class="space-y-4">
+            <div>
+                <label for="secret_key" class="block mb-1 text-gray-300">Masukkan Kunci Rahasia</label>
+                <input type="password" id="secret_key" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600 focus:border-red-500" placeholder="Kunci rahasia dari server.js">
+            </div>
+            <button id="reset-button" class="bg-red-600 hover:bg-red-700 disabled:bg-red-900 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg w-full transition-colors">HAPUS SELURUH DATA</button>
+        </div>
+        <div id="response-message" class="mt-4 text-center"></div>
+    </div>
+
+    <script>
+        document.getElementById('reset-button').addEventListener('click', async () => {
+            const secretKey = document.getElementById('secret_key').value;
+            const messageDiv = document.getElementById('response-message');
+            messageDiv.innerHTML = '';
+
+            if (!secretKey) {
+                messageDiv.innerHTML = '<p class="text-yellow-400">Silakan masukkan kunci rahasia.</p>';
+                return;
+            }
+
+            const confirmation = confirm("PERINGATAN TERAKHIR:\nAnda benar-benar yakin ingin menghapus semua data operasional? Tindakan ini tidak dapat dibatalkan.");
+
+            if (confirmation) {
+                messageDiv.innerHTML = '<p class="text-blue-400">Memproses penghapusan...</p>';
+                try {
+                    const response = await fetch(`/admin/reset-database?secret_key=${encodeURIComponent(secretKey)}`);
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        messageDiv.innerHTML = `<p class="text-green-400 font-bold">${result.message}</p>`;
+                    } else {
+                        throw new Error(result.error || 'Terjadi kesalahan yang tidak diketahui.');
+                    }
+                } catch (error) {
+                    messageDiv.innerHTML = `<p class="text-red-400 font-bold">Gagal: ${error.message}</p>`;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Input Data Harian - Cost Control</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #0a0a0a; color: white; }
+    .dropdown.is-open .dropdown-menu { display: block; }
+    h3 {
+        @apply text-xl font-semibold text-green-400 mb-3 mt-8 border-b border-green-500/20 pb-2;
+    }
+  </style>
+</head>
+<body class="font-sans p-4 sm:p-6">
+
+  <div id="nav-placeholder"></div>
+  <div id="notification-container" class="fixed bottom-5 right-5 z-50"></div>
+
+  <div class="max-w-6xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg border border-green-500/30">
+    <h2 class="text-2xl font-bold mb-4 text-red-500">Input Data Operasi Harian</h2>
+    <form id="dailyForm" class="space-y-4">
+      
+      <div>
+        <label class="block mb-1 text-gray-300">Tanggal Operasi</label>
+        <input type="date" name="tanggal" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600 focus:border-green-500" required>
+      </div>
+
+      <h3 class="mt-4">Data Penambangan (Truck Count)</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div><label class="block mb-1 text-gray-300">OB Removal (BCM)</label><input type="number" step="any" name="ob_removal_tc" class="w-full p-2 bg-gray-700 rounded"></div>
+        <div><label class="block mb-1 text-gray-300">Ritase OB</label><input type="number" step="any" name="ritase_ob" class="w-full p-2 bg-gray-700 rounded"></div>
+        <div><label class="block mb-1 text-gray-300">Jarak OB (meter)</label><input type="number" step="any" name="jarak_ob" class="w-full p-2 bg-gray-700 rounded"></div>
+        <div><label class="block mb-1 text-gray-300">Coal Getting (Ton)</label><input type="number" step="any" name="coal_getting_tc" class="w-full p-2 bg-gray-700 rounded"></div>
+        <div><label class="block mb-1 text-gray-300">Ritase Coal</label><input type="number" step="any" name="ritase_coal" class="w-full p-2 bg-gray-700 rounded"></div>
+        <div><label class="block mb-1 text-gray-300">Jarak Coal (meter)</label><input type="number" step="any" name="jarak_coal" class="w-full p-2 bg-gray-700 rounded"></div>
+        <div><label class="block mb-1 text-gray-300">Mud Removal (BCM)</label><input type="number" step="any" name="mud_removal" class="w-full p-2 bg-gray-700 rounded"></div>
+      </div>
+      
+     
+      
+      <h3>Detail Penggunaan Alat Berat</h3>
+      <div id="alatContainer" class="space-y-4"></div>
+      <button type="button" id="addAlatButton" class="mt-2 bg-green-500 hover:bg-green-600 text-black font-semibold px-4 py-2 rounded-lg transition-colors">+ Tambah Alat Berat</button>
+
+      <h3>Detail Penggunaan Sarana</h3>
+<div id="saranaContainer" class="space-y-4"></div>
+<button type="button" id="addSaranaButton" class="mt-2 bg-purple-500 hover:bg-purple-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors">+ Tambah Sarana</button>
+
+ <h3>Material Hauling Road</h3>
+      <div id="materialContainer" class="space-y-4"></div>
+      <button type="button" id="addMaterialButton" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors">+ Tambah Material</button>
+      
+      <button type="submit" id="submit-button" class="bg-red-500 hover:bg-red-600 px-6 py-3 text-white font-bold rounded-lg w-full mt-10">Submit Data Harian</button>
+    </form>
+  </div>
+  
+  <script src="js/common.js"></script>
+  <script src="js/inputData.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Cost Control</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { background-color: #0a0a0a; }
+    .kpi-box { 
+        background-color: #1f2937; 
+        border: 1px solid #374151; 
+        padding: 1.5rem; 
+        border-radius: 0.75rem; 
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .kpi-title { color: #9ca3af; font-size: 1rem; font-weight: 600; }
+    .kpi-value { color: #f9fafb; font-size: 2.25rem; font-weight: bold; }
+    .kpi-comparison { font-size: 0.875rem; }
+    .kpi-sub-metric { color: #d1d5db; font-size: 0.875rem; }
+    .kpi-sub-value { color: #f9fafb; font-weight: 600; }
+    
+    .chart-container { display: flex; flex-direction: column; background-color: #1f2937; border: 1px solid #374151; padding: 1.5rem; border-radius: 0.75rem; min-height: 420px; }
+    .chart-title { color: #d1d5db; font-weight: 600; margin-bottom: 1rem; text-align: center; font-size: 1.25rem; }
+    
+    .dropdown.is-open .dropdown-menu { display: block; }
+    .loader { border: 4px solid #f3f3f3; border-top: 4px solid #16a34a; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="text-white p-4 sm:p-6 font-sans">
+  
+  <div id="nav-placeholder"></div>
+  <div id="notification-container" class="fixed bottom-5 right-5 z-50"></div>
+
+  <div id="dashboard-container" class="max-w-7xl mx-auto space-y-6">
+    <div class="bg-gray-900 p-4 rounded-xl border border-green-500/30">
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
+            <div>
+                <label for="startDate" class="block text-sm text-gray-300 mb-1">Tanggal Mulai</label>
+                <input type="date" id="startDate" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600">
+            </div>
+            <div>
+                <label for="endDate" class="block text-sm text-gray-300 mb-1">Tanggal Akhir</label>
+                <input type="date" id="endDate" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600">
+            </div>
+            <div class="flex gap-2 col-span-1 sm:col-span-2">
+                <button id="filterButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg w-full">Terapkan Filter</button>
+                <button id="resetButton" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg w-full">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loader-wrapper" class="hidden justify-center py-10"><div class="loader"></div></div>
+    
+    <div id="main-content" class="hidden space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="kpi-container">
+            </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="chart-container">
+                <h3 class="chart-title">Pencapaian vs. Target Produksi</h3>
+                <div class="relative flex-grow">
+                    <canvas id="productionTargetChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Komposisi Biaya Produksi (COGS)</h3>
+                <div class="relative flex-grow">
+                    <canvas id="costCompositionChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-container lg:col-span-2">
+                <h3 class="chart-title">Tren BPP Kumulatif</h3>
+                <div class="relative flex-grow">
+                    <canvas id="bppTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laporan BPP Hauling - Cost Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #0a0a0a; }
+        .dropdown.is-open .dropdown-menu { display: block; }
+        .summary-card { background-color: #1f2937; border: 1px solid #374151; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #16a34a; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="text-white p-4 sm:p-6 font-sans">
+
+    <div id="nav-placeholder"></div>
+    <div id="notification-container" class="fixed bottom-5 right-5 z-50"></div>
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        <h1 class="text-3xl font-bold text-red-400">Laporan Biaya Pokok Hauling (BPP)</h1>
+
+        <div class="bg-gray-900 p-4 rounded-xl border border-green-500/30">
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
+                <div>
+                    <label for="startDate" class="block text-sm text-gray-300 mb-1">Tanggal Mulai</label>
+                    <input type="date" id="startDate" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600">
+                </div>
+                <div>
+                    <label for="endDate" class="block text-sm text-gray-300 mb-1">Tanggal Akhir</label>
+                    <input type="date" id="endDate" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600">
+                </div>
+                <div class="flex gap-2 col-span-1 sm:col-span-2">
+                    <button id="filterButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg w-full">Terapkan Filter</button>
+                    <button id="resetButton" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg w-full">Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="loader-wrapper" class="hidden justify-center py-10"><div class="loader"></div></div>
+        
+        <div id="main-content" class="hidden space-y-8">
+            <div class="summary-card p-6 rounded-lg">
+                <h2 class="text-xl font-semibold text-green-400 mb-4">Ringkasan BPP Hauling</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <div>
+                        <p class="text-gray-400 text-sm">A. Total Biaya Produksi</p>
+                        <p id="summary-total-biaya" class="text-2xl font-bold">Rp 0</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-400 text-sm">B. Total Tonase Hauling (Nett)</p>
+                        <p id="summary-total-tonase" class="text-2xl font-bold">0 Ton</p>
+                    </div>
+                    <div class="p-4 bg-green-500/10 rounded-lg">
+                        <p class="text-green-300 text-sm">BPP Hauling (A / B)</p>
+                        <p id="summary-bpp" class="text-3xl font-extrabold text-green-400">Rp 0 / Ton</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1">
+                <div class="summary-card p-6 rounded-lg">
+                    <h2 class="text-xl font-semibold text-green-400 mb-4">Rincian & Komposisi Biaya</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <table class="w-full text-sm">
+                            <thead class="border-b border-gray-600"><tr class="text-gray-400">
+                                <th class="py-2 text-left">Komponen Biaya</th>
+                                <th class="py-2 text-right">Total Biaya (Rp)</th>
+								<th class="py-2 text-right">Biaya / Ton</th>
+                                <th class="py-2 text-right">Kontribusi</th>
+                            </tr></thead>
+                            <tbody id="cost-breakdown-table"></tbody>
+                        </table>
+                        <div class="relative h-64 w-full">
+                            <canvas id="cost-pie-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/bppHauling.js"></script>
+</body>
+</html>

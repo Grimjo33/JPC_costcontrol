@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impor Data Trucking - Cost Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body { background-color: #0a0a0a; color: white; }
+        #paste-area { min-height: 200px; }
+        #preview-table th, #preview-table td { padding: 8px; border: 1px solid #374151; white-space: nowrap; }
+        .dropdown.is-open .dropdown-menu { display: block; }
+    </style>
+</head>
+<body class="font-sans p-4 sm:p-6">
+
+    <div id="nav-placeholder"></div>
+    <div id="notification-container" class="fixed bottom-5 right-5 z-50"></div>
+
+    <div class="max-w-6xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg border border-green-500/30">
+        <h2 class="text-2xl font-bold mb-4 text-red-500">Impor Data Hauling Trucking Harian</h2>
+        <div id="impor-area">
+            <p class="text-sm text-gray-400 mb-4">Pilih file atau tempel data dari Excel. Sistem akan otomatis mengambil tanggal dari kolom 'checkoutTime'.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <label for="paste-area" class="block mb-2 text-gray-300">Opsi 1: Salin & Tempel Data</label>
+                    <textarea id="paste-area" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600 font-mono text-sm" placeholder="Salin data dari Excel (termasuk header), lalu tempel di sini."></textarea>
+                </div>
+                <div>
+                    <label for="upload-file" class="block mb-2 text-gray-300">Opsi 2: Unggah File Excel/CSV</label>
+                    <input type="file" id="upload-file" accept=".xlsx, .xls, .csv" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-white hover:file:bg-green-700">
+                </div>
+            </div>
+            <button id="process-btn" class="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full">Proses Data</button>
+        </div>
+        <div id="preview-section" class="hidden mt-8">
+            <h3 class="text-xl font-semibold text-green-400 mb-2">Pratinjau Data</h3>
+            <p id="preview-summary" class="text-sm text-gray-400 mb-2"></p>
+            <div class="overflow-auto max-h-80 border border-gray-700 rounded-lg">
+                <table id="preview-table" class="w-full text-xs text-left">
+                    <thead class="bg-gray-800 sticky top-0"></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="flex gap-4 mt-6">
+                <button id="cancel-btn" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg">Batal</button>
+                <button id="submit-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg">Simpan ke Database</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/common.js"></script>
+    <script src="js/inputTrucking.js"></script>
+</body>
+</html>

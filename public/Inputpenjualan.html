@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Data Penjualan - Cost Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> 
+        body { background-color: #0a0a0a; color: white; } 
+       .dropdown.is-open .dropdown-menu { display: block; }
+    </style>
+</head>
+<body class="font-sans p-4 sm:p-6">
+
+    <div id="nav-placeholder"></div>
+    <div id="notification-container" class="fixed bottom-5 right-5 z-50"></div>
+
+    <div class="max-w-2xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg border border-green-500/30">
+        <h2 class="text-2xl font-bold mb-6 text-red-500">Input Data Penjualan (FOS/CIF)</h2>
+        <form id="penjualanForm" class="space-y-4">
+            <div>
+                <label class="block mb-1 text-gray-300">Tanggal Pengakuan Penjualan</label>
+                <input type="date" name="tanggal_penjualan" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600 focus:border-green-500" required>
+            </div>
+            <div>
+                <label class="block mb-1 text-gray-300">Tipe Dokumen</label>
+                <select name="tipe_dokumen" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600 focus:border-green-500" required>
+                    <option value="Berita Acara FOS">Berita Acara FOS</option>
+                    <option value="SKAB CIF">SKAB CIF</option>
+                </select>
+            </div>
+            <div>
+                <label class="block mb-1 text-gray-300">Nomor Dokumen</label>
+                <input type="text" name="nomor_dokumen" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600" required>
+            </div>
+            <div>
+                <label class="block mb-1 text-gray-300">Buyer</label>
+                <input type="text" name="buyer" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600">
+            </div>
+            <div>
+                <label class="block mb-1 text-gray-300">Tonase Penjualan (Ton)</label>
+                <input type="number" step="any" name="tonase_penjualan" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600" required>
+            </div>
+            <div>
+                <label class="block mb-1 text-gray-300">Notes</label>
+                <textarea name="notes" rows="2" class="w-full p-2 bg-gray-800 text-white rounded border border-gray-600"></textarea>
+            </div>
+            <button type="submit" id="submit-button" class="bg-red-500 hover:bg-red-600 px-6 py-3 text-white font-bold rounded-lg w-full mt-6">Simpan Data Penjualan</button>
+        </form>
+    </div>
+    
+    <script src="js/common.js"></script>
+    <script src="js/inputPenjualan.js"></script>
+</body>
+</html>
