@@ -20,7 +20,7 @@ const tempDbPath = path.join('/tmp', 'database.db');
 
 // Salin file database ke /tmp jika belum ada di sana
 // Ini hanya terjadi saat "cold start"
-if (!fs.existsSync(tempDbPath)) {
+if (fs.existsSync(sourceDbPath) && !fs.existsSync(tempDbPath)) {
   try {
     fs.copyFileSync(sourceDbPath, tempDbPath);
     console.log('Database successfully copied to /tmp.');
@@ -43,7 +43,8 @@ const dbAll = (sql, params = []) => new Promise((resolve, reject) => db.all(sql,
 
 app.get('/', (req, res) => {
     res.redirect('/Dashboard_Harian.html');
-);
+});
+
 app.get('/api/get-jarak-fleet-by-tanggal', async (req, res) => {
     try {
         const { tanggal } = req.query;
@@ -1364,6 +1365,7 @@ app.get('/api/dashboard-data', async (req, res) => {
 
 // Tambahkan baris ini di paling bawah
 module.exports = app;
+
 
 
 
