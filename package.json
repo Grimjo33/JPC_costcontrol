@@ -1,7 +1,7 @@
 {
-  "name": "eng",
+  "name": "jpc-costcontrol",
   "version": "1.0.0",
-  "description": "",
+  "description": "A cost control application for JPC",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -16,6 +16,6 @@
     "sqlite3": "^5.1.7"
   },
   "keywords": [],
-  "author": "",
+  "author": "Grimjo33",
   "license": "ISC"
 }
