@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+ddocument.addEventListener('DOMContentLoaded', () => {
     const loaderWrapper = document.getElementById('loader-wrapper');
     const mainContent = document.getElementById('main-content');
     
@@ -194,4 +194,5 @@ loadAndRender({
     startDate: firstDayString,
     endDate: lastDayString
 });
+
 });
