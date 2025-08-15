@@ -43,7 +43,7 @@ const dbAll = (sql, params = []) => new Promise((resolve, reject) => db.all(sql,
 
 app.get('/', (req, res) => {
     res.redirect('/Dashboard_Harian.html');
-});
+);
 app.get('/api/get-jarak-fleet-by-tanggal', async (req, res) => {
     try {
         const { tanggal } = req.query;
@@ -1364,6 +1364,7 @@ app.get('/api/dashboard-data', async (req, res) => {
 
 // Tambahkan baris ini di paling bawah
 module.exports = app;
+
 
 
 
