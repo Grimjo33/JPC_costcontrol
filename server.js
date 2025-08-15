@@ -1369,6 +1369,11 @@ app.get('/api/dashboard-data', async (req, res) => {
 
 
 
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running and accessible on your network at port ${PORT}.`);
-});
+// SETELAH DIUBAH
+// Hapus atau beri komentar pada bagian app.listen
+// app.listen(PORT, '0.0.0.0', () => {
+//     console.log(`Server running and accessible on your network at port ${PORT}.`);
+// });
+
+// Tambahkan baris ini di paling bawah
+module.exports = app;
